@@ -3,22 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Item Track - Campus Lost & Found</title>
+    <title>Item Tracker - Campus Lost & Found</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #4361ee;
-            --secondary: #3a0ca3;
+            --primary-light: #4895ef;
+            --primary-dark: #3a0ca3;
+            --secondary: #7209b7;
+            --accent: #f72585;
             --success: #4cc9f0;
-            --danger: #f72585;
             --warning: #fca311;
-            --info: #4895ef;
             --light: #f8f9fa;
             --dark: #212529;
-            --background: #ffffff;
-            --text: #333333;
+            --gray: #6c757d;
+            --background: #f0f2f5;
             --card-bg: #ffffff;
+            --text: #333333;
             --border: #dee2e6;
             --shadow: rgba(0, 0, 0, 0.1);
         }
@@ -35,14 +37,15 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            transition: background-color 0.3s, color 0.3s;
+            transition: background-color 0.3s, color 0.3s, transform 0.3s, box-shadow 0.3s;
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             background-color: var(--background);
             color: var(--text);
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
         .container {
@@ -54,10 +57,10 @@
 
         /* Header & Navigation */
         header {
-            background-color: var(--primary);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
             padding: 1rem 0;
-            box-shadow: 0 2px 5px var(--shadow);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -70,14 +73,17 @@
         }
 
         .logo {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 700;
             display: flex;
             align-items: center;
+            animation: fadeIn 1s ease;
         }
 
-        .logo i {
+        .logo-icon {
             margin-right: 0.5rem;
+            color: var(--warning);
+            font-size: 2rem;
         }
 
         nav ul {
@@ -87,6 +93,7 @@
 
         nav ul li {
             margin-left: 1.5rem;
+            position: relative;
         }
 
         nav ul li a {
@@ -95,10 +102,27 @@
             font-weight: 500;
             padding: 0.5rem;
             border-radius: 4px;
+            transition: all 0.3s;
         }
 
         nav ul li a:hover {
             background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background-color: var(--warning);
+            transition: width 0.3s;
+        }
+
+        nav ul li a:hover::after {
+            width: 100%;
         }
 
         .user-actions {
@@ -108,33 +132,37 @@
 
         .btn {
             display: inline-block;
-            padding: 0.5rem 1rem;
+            padding: 0.7rem 1.5rem;
             border: none;
-            border-radius: 4px;
+            border-radius: 50px;
             cursor: pointer;
-            font-weight: 500;
+            font-weight: 600;
             text-decoration: none;
             transition: all 0.3s;
+            font-family: 'Poppins', sans-serif;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .btn-primary {
-            background-color: var(--primary);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
             color: white;
         }
 
         .btn-primary:hover {
-            background-color: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
 
         .btn-outline {
             background-color: transparent;
-            border: 1px solid white;
+            border: 2px solid white;
             color: white;
         }
 
         .btn-outline:hover {
             background-color: white;
             color: var(--primary);
+            transform: translateY(-3px);
         }
 
         .theme-toggle {
@@ -144,6 +172,18 @@
             cursor: pointer;
             font-size: 1.2rem;
             margin-left: 1rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(30deg);
         }
 
         /* Main Content */
@@ -154,13 +194,15 @@
 
         .hero {
             text-align: center;
-            padding: 3rem 0;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
-            border-radius: 8px;
-            margin-bottom: 2rem;
+            border-radius: 16px;
+            margin-bottom: 3rem;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            animation: slideUp 1s ease;
         }
 
         .hero-content {
@@ -169,39 +211,108 @@
         }
 
         .hero h1 {
-            font-size: 2.5rem;
+            font-size: 3rem;
             margin-bottom: 1rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         .hero p {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             max-width: 700px;
-            margin: 0 auto 1.5rem;
+            margin: 0 auto 2rem;
+            font-weight: 300;
         }
 
-        .animated-svg {
+        .hero-pattern {
             position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 300px;
-            height: 200px;
-            opacity: 0.7;
-            z-index: 1;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100"><circle cx="50" cy="50" r="40" stroke="white" stroke-width="2" fill="none" /></svg>');
+            background-size: 200px;
+        }
+
+        .floating-items {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .floating-item {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.2;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-item:nth-child(1) {
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .floating-item:nth-child(2) {
+            top: 60%;
+            left: 80%;
+            animation-delay: 1s;
+        }
+
+        .floating-item:nth-child(3) {
+            top: 40%;
+            left: 70%;
+            animation-delay: 2s;
+        }
+
+        .floating-item:nth-child(4) {
+            top: 70%;
+            left: 20%;
+            animation-delay: 3s;
+        }
+
+        .floating-item:nth-child(5) {
+            top: 30%;
+            left: 50%;
+            animation-delay: 4s;
         }
 
         /* Search Section */
         .search-section {
             background-color: var(--card-bg);
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px var(--shadow);
-            margin-bottom: 2rem;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px var(--shadow);
+            margin-bottom: 3rem;
+            animation: fadeIn 1s ease 0.3s both;
+        }
+
+        .search-section h2 {
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            font-weight: 600;
+            position: relative;
+            display: inline-block;
+        }
+
+        .search-section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 50px;
+            height: 4px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: 2px;
         }
 
         .search-form {
             display: grid;
             grid-template-columns: 1fr auto auto;
-            gap: 1rem;
+            gap: 1.5rem;
             align-items: end;
         }
 
@@ -219,96 +330,172 @@
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 500;
+            color: var(--primary);
         }
 
         .form-control {
             width: 100%;
-            padding: 0.75rem;
-            border: 1px solid var(--border);
-            border-radius: 4px;
+            padding: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 12px;
             background-color: var(--card-bg);
             color: var(--text);
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
         }
 
         /* Items Grid */
+        .section-title {
+            margin-bottom: 2rem;
+            color: var(--primary);
+            font-weight: 600;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 50px;
+            height: 4px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: 2px;
+        }
+
         .items-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
+            gap: 2rem;
             margin-top: 2rem;
         }
 
         .item-card {
             background-color: var(--card-bg);
-            border-radius: 8px;
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 2px 10px var(--shadow);
-            transition: transform 0.3s;
+            box-shadow: 0 10px 20px var(--shadow);
+            transition: all 0.3s;
+            animation: fadeIn 1s ease;
+            position: relative;
         }
 
         .item-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px var(--shadow);
         }
 
         .item-image {
             height: 200px;
             overflow: hidden;
+            position: relative;
         }
 
         .item-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.3s;
+            transition: transform 0.5s;
         }
 
         .item-card:hover .item-image img {
-            transform: scale(1.05);
+            transform: scale(1.1);
+        }
+
+        .item-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .badge-lost {
+            background: linear-gradient(135deg, var(--accent) 0%, #ff4da6 100%);
+        }
+
+        .badge-found {
+            background: linear-gradient(135deg, var(--success) 0%, #53d9f7 100%);
+        }
+
+        .badge-resolved {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
         }
 
         .item-content {
             padding: 1.5rem;
         }
 
-        .item-status {
-            display: inline-block;
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-        }
-
-        .status-lost {
-            background-color: var(--danger);
-            color: white;
-        }
-
-        .status-found {
-            background-color: var(--success);
-            color: white;
-        }
-
-        .status-resolved {
-            background-color: var(--info);
-            color: white;
-        }
-
         .item-title {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             margin-bottom: 0.5rem;
             font-weight: 600;
+            color: var(--primary-dark);
         }
 
         .item-details {
-            color: #6c757d;
+            color: var(--gray);
             font-size: 0.9rem;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .item-details p {
+            display: flex;
+            align-items: center;
+        }
+
+        .item-details i {
+            margin-right: 0.5rem;
+            color: var(--primary);
         }
 
         .item-actions {
             display: flex;
             justify-content: space-between;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Neumorphic Design for Login/Signup */
+        .neumorphic {
+            background: var(--background);
+            border-radius: 20px;
+            box-shadow: 10px 10px 20px var(--shadow), 
+                        -10px -10px 20px var(--card-bg);
+            padding: 2rem;
+        }
+
+        .neumorphic .form-control {
+            background: var(--background);
+            box-shadow: inset 5px 5px 10px var(--shadow), 
+                        inset -5px -5px 10px var(--card-bg);
+            border: none;
+        }
+
+        .neumorphic .btn-primary {
+            box-shadow: 5px 5px 10px var(--shadow), 
+                        -5px -5px 10px var(--card-bg);
+        }
+
+        .neumorphic .btn-primary:active {
+            box-shadow: inset 5px 5px 10px var(--shadow), 
+                        inset -5px -5px 10px var(--card-bg);
         }
 
         /* Modals */
@@ -319,41 +506,61 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.7);
             z-index: 1000;
             overflow-y: auto;
+            animation: fadeIn 0.3s ease;
         }
 
         .modal-content {
             background-color: var(--card-bg);
             margin: 2rem auto;
-            padding: 2rem;
-            border-radius: 8px;
+            padding: 2.5rem;
+            border-radius: 20px;
             max-width: 600px;
             width: 90%;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            animation: slideUp 0.5s ease;
+            position: relative;
         }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .modal-header h2 {
+            color: var(--primary);
+            font-weight: 600;
         }
 
         .close-modal {
             background: none;
             border: none;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             cursor: pointer;
             color: var(--text);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .close-modal:hover {
+            background-color: var(--background);
+            transform: rotate(90deg);
         }
 
         /* Forms */
         .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 1rem;
+            gap: 1.5rem;
         }
 
         @media (max-width: 576px) {
@@ -371,27 +578,28 @@
         }
 
         .notification {
-            padding: 1rem;
+            padding: 1.2rem;
             margin-bottom: 1rem;
-            border-radius: 4px;
+            border-radius: 12px;
             color: white;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px var(--shadow);
-            animation: slideIn 0.3s forwards;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.5s forwards;
+            min-width: 300px;
         }
 
         .notification-success {
-            background-color: var(--success);
+            background: linear-gradient(135deg, var(--success) 0%, #53d9f7 100%);
         }
 
         .notification-error {
-            background-color: var(--danger);
+            background: linear-gradient(135deg, var(--accent) 0%, #ff4da6 100%);
         }
 
         .notification-info {
-            background-color: var(--info);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
         }
 
         .close-notification {
@@ -400,6 +608,115 @@
             color: white;
             cursor: pointer;
             margin-left: 1rem;
+            font-size: 1.2rem;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            color: white;
+            padding: 3rem 0 1.5rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background-color: var(--warning);
+            border-radius: 2px;
+        }
+
+        .footer-section p, .footer-section li {
+            margin-bottom: 1rem;
+            opacity: 0.9;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section a {
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: var(--warning);
+            padding-left: 5px;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Admin Dashboard */
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 20px var(--shadow);
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px var(--shadow);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @keyframes slideIn {
@@ -413,58 +730,27 @@
             }
         }
 
-        /* Footer */
-        footer {
-            background-color: var(--primary);
-            color: white;
-            padding: 2rem 0;
-            margin-top: 2rem;
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
-
-        .footer-section h3 {
-            margin-bottom: 1rem;
-            font-size: 1.2rem;
-        }
-
-        .footer-bottom {
-            text-align: center;
-            margin-top: 2rem;
-            padding-top: 1rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* Admin Dashboard */
-        .dashboard-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background-color: var(--card-bg);
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px var(--shadow);
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: var(--primary);
-        }
-
-        .stat-label {
-            color: #6c757d;
-            font-weight: 500;
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
         }
 
         /* Responsive Design */
@@ -477,6 +763,11 @@
             nav ul {
                 margin-top: 1rem;
                 justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            nav ul li {
+                margin: 0.5rem;
             }
 
             .user-actions {
@@ -484,15 +775,15 @@
             }
 
             .hero h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
 
             .hero p {
-                font-size: 1rem;
+                font-size: 1.1rem;
             }
 
-            .animated-svg {
-                display: none;
+            .search-form {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -501,8 +792,8 @@
             border: 4px solid rgba(0, 0, 0, 0.1);
             border-left: 4px solid var(--primary);
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
+            width: 40px;
+            height: 40px;
             animation: spin 1s linear infinite;
             margin: 2rem auto;
         }
@@ -512,27 +803,11 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Animation for SVG elements */
-        .svg-animate path {
-            stroke-dasharray: 1000;
-            stroke-dashoffset: 1000;
-            animation: dash 5s linear forwards infinite;
-        }
-
-        @keyframes dash {
-            to {
-                stroke-dashoffset: 0;
-            }
-        }
-
-        .float-animation {
-            animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-            100% { transform: translateY(0px); }
+        /* Demo images */
+        .demo-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
     </style>
 </head>
@@ -541,8 +816,8 @@
     <header>
         <div class="container header-content">
             <div class="logo">
-                <i class="fas fa-search"></i>
-                <span>Item Track</span>
+                <i class="fas fa-search-location logo-icon"></i>
+                <span>Item Tracker</span>
             </div>
             <nav>
                 <ul>
@@ -579,18 +854,16 @@
             <div class="hero">
                 <div class="hero-content">
                     <h1>Lost Something on Campus?</h1>
-                    <p>Item Track helps you report and search for lost items across the university campus.</p>
+                    <p>Item Tracker helps you report and search for lost items across the campus with ease.</p>
                     <a href="#" class="btn btn-primary" id="hero-post-btn">Report an Item</a>
                 </div>
-                <div class="animated-svg float-animation">
-                    <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
-                        <g stroke-width="10" fill="none" stroke="#fff">
-                            <path d="M250,100 C150,100 100,150 100,250 C100,350 150,400 250,400 C350,400 400,350 400,250 C400,150 350,100 250,100 Z" class="svg-animate"/>
-                            <path d="M200,200 L300,300" class="svg-animate"/>
-                            <path d="M300,200 L200,300" class="svg-animate"/>
-                            <circle cx="250" cy="250" r="150" stroke-width="2" opacity="0.2" class="svg-animate"/>
-                        </g>
-                    </svg>
+                <div class="hero-pattern"></div>
+                <div class="floating-items">
+                    <div class="floating-item"><i class="fas fa-key"></i></div>
+                    <div class="floating-item"><i class="fas fa-book"></i></div>
+                    <div class="floating-item"><i class="fas fa-laptop"></i></div>
+                    <div class="floating-item"><i class="fas fa-mobile-alt"></i></div>
+                    <div class="floating-item"><i class="fas fa-wallet"></i></div>
                 </div>
             </div>
 
@@ -627,7 +900,7 @@
             </div>
 
             <!-- Featured Items -->
-            <h2>Recently Reported Items</h2>
+            <h2 class="section-title">Recently Reported Items</h2>
             <div class="items-grid" id="featured-items">
                 <!-- Items will be populated by JavaScript -->
                 <div class="spinner" id="loading-spinner"></div>
@@ -636,7 +909,7 @@
 
         <!-- Lost Items Section -->
         <section id="lost-section" style="display: none;">
-            <h2>Lost Items</h2>
+            <h2 class="section-title">Lost Items</h2>
             <div class="items-grid" id="lost-items">
                 <!-- Items will be populated by JavaScript -->
             </div>
@@ -644,7 +917,7 @@
 
         <!-- Found Items Section -->
         <section id="found-section" style="display: none;">
-            <h2>Found Items</h2>
+            <h2 class="section-title">Found Items</h2>
             <div class="items-grid" id="found-items">
                 <!-- Items will be populated by JavaScript -->
             </div>
@@ -652,7 +925,7 @@
 
         <!-- Post Item Section -->
         <section id="post-section" style="display: none;">
-            <h2>Report a Lost or Found Item</h2>
+            <h2 class="section-title">Report a Lost or Found Item</h2>
             <div class="search-section">
                 <form id="item-form">
                     <div class="form-grid">
@@ -708,7 +981,7 @@
 
         <!-- Admin Dashboard Section -->
         <section id="dashboard-section" style="display: none;">
-            <h2>Admin Dashboard</h2>
+            <h2 class="section-title">Admin Dashboard</h2>
             
             <div class="dashboard-stats">
                 <div class="stat-card">
@@ -765,7 +1038,7 @@
 
         <!-- Login Modal -->
         <div class="modal" id="login-modal">
-            <div class="modal-content">
+            <div class="modal-content neumorphic">
                 <div class="modal-header">
                     <h2>Login</h2>
                     <button class="close-modal">&times;</button>
@@ -781,18 +1054,18 @@
                     </div>
                     <button type="submit" class="btn btn-primary">Login</button>
                 </form>
-                <p style="margin-top: 1rem;">
-                    <a href="#" id="forgot-password">Forgot Password?</a>
+                <p style="margin-top: 1.5rem; text-align: center;">
+                    <a href="#" id="forgot-password" style="color: var(--primary); text-decoration: none;">Forgot Password?</a>
                 </p>
-                <p style="margin-top: 1rem;">
-                    Don't have an account? <a href="#" id="show-signup">Sign Up</a>
+                <p style="margin-top: 1rem; text-align: center;">
+                    Don't have an account? <a href="#" id="show-signup" style="color: var(--primary); text-decoration: none;">Sign Up</a>
                 </p>
             </div>
         </div>
 
         <!-- Signup Modal -->
         <div class="modal" id="signup-modal">
-            <div class="modal-content">
+            <div class="modal-content neumorphic">
                 <div class="modal-header">
                     <h2>Create Account</h2>
                     <button class="close-modal">&times;</button>
@@ -824,15 +1097,15 @@
                     </div>
                     <button type="submit" class="btn btn-primary">Create Account</button>
                 </form>
-                <p style="margin-top: 1rem;">
-                    Already have an account? <a href="#" id="show-login">Login</a>
+                <p style="margin-top: 1.5rem; text-align: center;">
+                    Already have an account? <a href="#" id="show-login" style="color: var(--primary); text-decoration: none;">Login</a>
                 </p>
             </div>
         </div>
 
         <!-- Forgot Password Modal -->
         <div class="modal" id="forgot-modal">
-            <div class="modal-content">
+            <div class="modal-content neumorphic">
                 <div class="modal-header">
                     <h2>Reset Password</h2>
                     <button class="close-modal">&times;</button>
@@ -855,35 +1128,29 @@
     <footer>
         <div class="container footer-content">
             <div class="footer-section">
-                <h3>Item Track</h3>
-                <p>Helping reunite lost items with their owners since 2023.</p>
+                <h3>Item Tracker</h3>
+                <p>Helping reunite lost items with their owners. Our platform makes it easy to report and find lost items on campus.</p>
             </div>
             <div class="footer-section">
                 <h3>Quick Links</h3>
-                <ul style="list-style: none;">
-                    <li><a href="#" style="color: white;">Home</a></li>
-                    <li><a href="#" style="color: white;">Report Lost Item</a></li>
-                    <li><a href="#" style="color: white;">Report Found Item</a></li>
-                    <li><a href="#" style="color: white;">Contact Us</a></li>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Report Lost Item</a></li>
+                    <li><a href="#">Report Found Item</a></li>
+                    <li><a href="#">Contact Us</a></li>
                 </ul>
             </div>
             <div class="footer-section">
                 <h3>Contact Info</h3>
-                <p><i class="fas fa-map-marker-alt"></i> University Campus, Building A</p>
-                <p><i class="fas fa-envelope"></i> itemtrack@university.edu</p>
-                <p><i class="fas fa-phone"></i> (123) 456-7890</p>
+                <p><i class="fas fa-map-marker-alt"></i> Polytechnic Campus</p>
+                <p><i class="fas fa-envelope"></i> itemtracker@polytechnic.edu</p>
+                <p><i class="fas fa-phone"></i> (234) 8025-824-393</p>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2023 Item Track. All rights reserved.</p>
+            <p>&copy; 2025 Item Tracker. All rights reserved.</p>
         </div>
     </footer>
-
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
 
     <script>
         // Firebase configuration - Replace with your actual config
@@ -898,11 +1165,18 @@
   measurementId: "G-ZDQQNG81XB"
 };
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-        const storage = firebase.storage();
+        // Initialize Firebase (commented out for demo)
+        // firebase.initializeApp(firebaseConfig);
+        // const auth = firebase.auth();
+        // const db = firebase.firestore();
+        // const storage = firebase.storage();
+
+        // For demo purposes, we'll use a mock data system
+        const mockAuth = {
+            currentUser: null,
+            users: [],
+            items: []
+        };
 
         // DOM Elements
         const themeToggle = document.getElementById('theme-toggle');
@@ -968,6 +1242,191 @@
         let currentUserData = null;
         let allItems = [];
         let allUsers = [];
+
+        // School-related item images
+        const itemImages = {
+            electronics: [
+                'https://images.unsplash.com/photo-1511389026070-a14ae610a1be?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80',
+                'https://images.unsplash.com/photo-1498049794561-7780e7231661?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80',
+                'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80'
+            ],
+            clothing: [
+                'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80',
+                'https://images.unsplash.com/photo-1506634572416-48cdfe530110?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80',
+                'https://images.unsplash.com/photo-1551232864-3f0890e580d9?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80'
+            ],
+            books: [
+                'https://images.unsplash.com/photo-1544947950-fa07a98d237f?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80',
+                'https://images.unsplash.com/photo-1541963463532-d68292c34b19?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80',
+                'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80'
+            ],
+            accessories: [
+                'https://images.unsplash.com/photo-1584917865442-de89df76afd3?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80',
+                'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80',
+                'https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80'
+            ],
+            documents: [
+                'https://images.unsplash.com/photo-1586074299757-dc655f18518c?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80',
+                'https://images.unsplash.com/photo-1542435503-956c469947f6?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80',
+                'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80'
+            ],
+            other: [
+                'https://images.unsplash.com/photo-1532012197267-da84d127e765?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80',
+                'https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80',
+                'https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80'
+            ]
+        };
+
+        // Sample data for demo
+        const sampleItems = [
+            {
+                id: '1',
+                title: 'Calculus Textbook',
+                category: 'books',
+                description: 'Lost my calculus textbook near the library. It has my name written on the inside cover.',
+                location: 'Main Library, ',
+                date: '2025-10-15',
+                type: 'lost',
+                status: 'active',
+                userId: 'sample-user',
+                userEmail: 'john.doe@university.edu',
+                userName: 'John Doe',
+                imageUrl: itemImages.books[0],
+                createdAt: new Date('2023-10-15')
+            },
+            {
+                id: '2',
+                title: 'Wireless Earbuds',
+                category: 'electronics',
+                description: 'Found a pair of black wireless earbuds in the student lounge.',
+                location: 'Student Union Building',
+                date: '2023-10-16',
+                type: 'found',
+                status: 'active',
+                userId: 'sample-user2',
+                userEmail: 'jane.smith@university.edu',
+                userName: 'Jane Smith',
+                imageUrl: itemImages.electronics[0],
+                createdAt: new Date('2025-10-16')
+            },
+            {
+                id: '3',
+                title: 'Student ID Card',
+                category: 'documents',
+                description: 'Found a student ID card near the science building.',
+                location: 'Science Building Entrance',
+                date: '2025-10-14',
+                type: 'found',
+                status: 'resolved',
+                userId: 'sample-user3',
+                userEmail: 'admin@university.edu',
+                userName: 'Admin User',
+                imageUrl: itemImages.documents[0],
+                createdAt: new Date('2023-10-14')
+            },
+            {
+                id: '4',
+                title: 'Blue Water Bottle',
+                category: 'other',
+                description: 'Lost my blue Hydro Flask water bottle in the gym.',
+                location: 'Campus Recreation Center',
+                date: '2025-10-17',
+                type: 'lost',
+                status: 'active',
+                userId: 'sample-user4',
+                userEmail: 'mike.jones@university.edu',
+                userName: 'Mike Jones',
+                imageUrl: itemImages.other[1],
+                createdAt: new Date('2023-10-17')
+            },
+            {
+                id: '5',
+                title: 'Graphing Calculator',
+                category: 'electronics',
+                description: 'TI-84 Plus graphing calculator lost in the math building.',
+                location: 'Engineering Building, Room 203',
+                date: '2025-10-13',
+                type: 'lost',
+                status: 'active',
+                userId: 'sample-user5',
+                userEmail: 'sarah.williams@university.edu',
+                userName: 'Sarah Williams',
+                imageUrl: itemImages.electronics[2],
+                createdAt: new Date('2025-10-13')
+            },
+            {
+                id: '6',
+                title: 'Leather Bag',
+                category: 'accessories',
+                description: 'Found a brown leather wallet in the cafeteria.',
+                location: 'Cafeteria, Table near window',
+                date: '2025-10-16',
+                type: 'found',
+                status: 'active',
+                userId: 'sample-user6',
+                userEmail: 'admin@university.edu',
+                userName: 'Admin User',
+                imageUrl: itemImages.accessories[0],
+                createdAt: new Date('2025-10-16')
+            }
+        ];
+
+        const sampleUsers = [
+            {
+                id: 'sample-user',
+                firstName: 'John',
+                lastName: 'Doe',
+                email: 'john.doe@university.edu',
+                role: 'user',
+                createdAt: new Date('2023-09-01')
+            },
+            {
+                id: 'sample-user2',
+                firstName: 'Jane',
+                lastName: 'Smith',
+                email: 'jane.smith@university.edu',
+                role: 'user',
+                createdAt: new Date('2025-09-05')
+            },
+            {
+                id: 'sample-user3',
+                firstName: 'Admin',
+                lastName: 'User',
+                email: 'admin@university.edu',
+                role: 'admin',
+                createdAt: new Date('2025-08-15')
+            },
+            {
+                id: 'sample-user4',
+                firstName: 'Mike',
+                lastName: 'Jones',
+                email: 'mike.jones@university.edu',
+                role: 'user',
+                createdAt: new Date('2025-09-10')
+            },
+            {
+                id: 'sample-user5',
+                firstName: 'Sarah',
+                lastName: 'Williams',
+                email: 'sarah.williams@university.edu',
+                role: 'user',
+                createdAt: new Date('2025-09-12')
+            },
+            {
+                id: 'sample-user6',
+                firstName: 'Robert',
+                lastName: 'Brown',
+                email: 'robert.brown@university.edu',
+                role: 'user',
+                createdAt: new Date('2025-09-20')
+            }
+        ];
+
+        // Initialize sample data
+        mockAuth.users = sampleUsers;
+        mockAuth.items = sampleItems;
+        allItems = sampleItems;
+        allUsers = sampleUsers;
 
         // Theme Toggle
         themeToggle.addEventListener('click', () => {
@@ -1101,7 +1560,11 @@
 
         logoutBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            auth.signOut();
+            currentUser = null;
+            currentUserData = null;
+            authButtons.style.display = 'flex';
+            userMenu.style.display = 'none';
+            navDashboard.style.display = 'none';
             showNotification('Logged out successfully');
         });
 
@@ -1140,15 +1603,27 @@
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
             
-            auth.signInWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    hideModal(loginModal);
-                    showNotification('Logged in successfully');
-                    loginForm.reset();
-                })
-                .catch((error) => {
-                    showNotification(error.message, 'error');
-                });
+            // Mock authentication
+            const user = mockAuth.users.find(u => u.email === email);
+            if (user) {
+                currentUser = { uid: user.id, email: user.email };
+                currentUserData = user;
+                authButtons.style.display = 'none';
+                userMenu.style.display = 'flex';
+                userName.textContent = currentUserData.firstName;
+                
+                if (currentUserData.role === 'admin') {
+                    navDashboard.style.display = 'block';
+                } else {
+                    navDashboard.style.display = 'none';
+                }
+                
+                hideModal(loginModal);
+                showNotification('Logged in successfully');
+                loginForm.reset();
+            } else {
+                showNotification('Invalid email or password', 'error');
+            }
         });
 
         signupForm.addEventListener('submit', (e) => {
@@ -1164,45 +1639,47 @@
                 return;
             }
             
-            auth.createUserWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    const user = userCredential.user;
-                    
-                    // Create user document in Firestore
-                    return db.collection('users').doc(user.uid).set({
-                        firstName: firstName,
-                        lastName: lastName,
-                        email: email,
-                        role: 'user',
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                })
-                .then(() => {
-                    hideModal(signupModal);
-                    showNotification('Account created successfully. Please verify your email.');
-                    signupForm.reset();
-                    
-                    // Send verification email
-                    auth.currentUser.sendEmailVerification();
-                })
-                .catch((error) => {
-                    showNotification(error.message, 'error');
-                });
+            // Check if user already exists
+            if (mockAuth.users.some(u => u.email === email)) {
+                showNotification('User with this email already exists', 'error');
+                return;
+            }
+            
+            // Create new user
+            const newUser = {
+                id: 'user-' + Date.now(),
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
+                role: 'user',
+                createdAt: new Date()
+            };
+            
+            mockAuth.users.push(newUser);
+            allUsers.push(newUser);
+            
+            currentUser = { uid: newUser.id, email: newUser.email };
+            currentUserData = newUser;
+            authButtons.style.display = 'none';
+            userMenu.style.display = 'flex';
+            userName.textContent = currentUserData.firstName;
+            
+            hideModal(signupModal);
+            showNotification('Account created successfully');
+            signupForm.reset();
         });
 
         forgotForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const email = document.getElementById('forgot-email').value;
             
-            auth.sendPasswordResetEmail(email)
-                .then(() => {
-                    hideModal(forgotModal);
-                    showNotification('Password reset email sent');
-                    forgotForm.reset();
-                })
-                .catch((error) => {
-                    showNotification(error.message, 'error');
-                });
+            if (mockAuth.users.some(u => u.email === email)) {
+                hideModal(forgotModal);
+                showNotification('Password reset email sent');
+                forgotForm.reset();
+            } else {
+                showNotification('No account found with this email', 'error');
+            }
         });
 
         itemForm.addEventListener('submit', (e) => {
@@ -1223,6 +1700,7 @@
             
             // Create item object
             const item = {
+                id: 'item-' + Date.now(),
                 title: title,
                 category: category,
                 description: description,
@@ -1233,46 +1711,22 @@
                 userId: currentUser.uid,
                 userEmail: currentUser.email,
                 userName: `${currentUserData.firstName} ${currentUserData.lastName}`,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                createdAt: new Date()
             };
             
-            // Upload image if exists
-            if (imageFile) {
-                const storageRef = storage.ref(`items/${Date.now()}_${imageFile.name}`);
-                const uploadTask = storageRef.put(imageFile);
-                
-                uploadTask.on('state_changed', 
-                    (snapshot) => {
-                        // Progress monitoring can be added here
-                    }, 
-                    (error) => {
-                        showNotification('Error uploading image: ' + error.message, 'error');
-                    }, 
-                    () => {
-                        // Get download URL
-                        uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                            item.imageUrl = downloadURL;
-                            saveItemToFirestore(item);
-                        });
-                    }
-                );
-            } else {
-                saveItemToFirestore(item);
-            }
+            // Add a random image from the category
+            const categoryImages = itemImages[category] || itemImages.other;
+            item.imageUrl = categoryImages[Math.floor(Math.random() * categoryImages.length)];
+            
+            // Add to mock database
+            mockAuth.items.push(item);
+            allItems.push(item);
+            
+            showNotification('Item reported successfully');
+            itemForm.reset();
+            showSection('home');
+            loadFeaturedItems();
         });
-
-        function saveItemToFirestore(item) {
-            db.collection('items').add(item)
-                .then((docRef) => {
-                    showNotification('Item reported successfully');
-                    itemForm.reset();
-                    showSection('home');
-                    loadFeaturedItems();
-                })
-                .catch((error) => {
-                    showNotification('Error reporting item: ' + error.message, 'error');
-                });
-        }
 
         searchBtn.addEventListener('click', () => {
             const keyword = document.getElementById('search-keyword').value.toLowerCase();
@@ -1345,17 +1799,17 @@
                 itemCard.className = 'item-card';
                 itemCard.dataset.id = item.id;
                 
-                const statusClass = item.status === 'resolved' ? 'status-resolved' : 
-                                  item.type === 'lost' ? 'status-lost' : 'status-found';
+                const statusClass = item.status === 'resolved' ? 'badge-resolved' : 
+                                  item.type === 'lost' ? 'badge-lost' : 'badge-found';
                 const statusText = item.status === 'resolved' ? 'Resolved' : 
                                   item.type === 'lost' ? 'Lost' : 'Found';
                 
                 itemCard.innerHTML = `
                     <div class="item-image">
                         <img src="${item.imageUrl || 'https://via.placeholder.com/300x200?text=No+Image'}" alt="${item.title}">
+                        <span class="item-badge ${statusClass}">${statusText}</span>
                     </div>
                     <div class="item-content">
-                        <span class="item-status ${statusClass}">${statusText}</span>
                         <h3 class="item-title">${item.title}</h3>
                         <div class="item-details">
                             <p><i class="fas fa-tag"></i> ${item.category}</p>
@@ -1363,9 +1817,9 @@
                             <p><i class="fas fa-calendar"></i> ${new Date(item.date).toLocaleDateString()}</p>
                         </div>
                         <div class="item-actions">
-                            <button class="btn btn-primary view-item">View Details</button>
+                            <button class="btn btn-primary btn-sm view-item">View Details</button>
                             ${currentUser && (currentUser.uid === item.userId || currentUserData.role === 'admin') ? `
-                                <button class="btn btn-outline edit-item">Edit</button>
+                                <button class="btn btn-outline btn-sm edit-item">Edit</button>
                             ` : ''}
                         </div>
                     </div>
@@ -1395,46 +1849,46 @@
             
             modalTitle.textContent = item.title;
             
-            const statusClass = item.status === 'resolved' ? 'status-resolved' : 
-                              item.type === 'lost' ? 'status-lost' : 'status-found';
+            const statusClass = item.status === 'resolved' ? 'badge-resolved' : 
+                              item.type === 'lost' ? 'badge-lost' : 'badge-found';
             const statusText = item.status === 'resolved' ? 'Resolved' : 
                               item.type === 'lost' ? 'Lost' : 'Found';
             
             modalBody.innerHTML = `
                 <div style="margin-bottom: 1.5rem;">
                     <img src="${item.imageUrl || 'https://via.placeholder.com/500x300?text=No+Image'}" 
-                         alt="${item.title}" style="width: 100%; border-radius: 8px;">
+                         alt="${item.title}" style="width: 100%; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
                 </div>
-                <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
-                    <span class="item-status ${statusClass}">${statusText}</span>
-                    <span class="item-status" style="background: #6c757d; color: white;">${item.category}</span>
+                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+                    <span class="item-badge ${statusClass}">${statusText}</span>
+                    <span class="item-badge" style="background: #6c757d;">${item.category}</span>
                 </div>
-                <p style="margin-bottom: 1rem;">${item.description}</p>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                <p style="margin-bottom: 1.5rem; line-height: 1.8;">${item.description}</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
                     <div>
-                        <p><strong><i class="fas fa-map-marker-alt"></i> Location:</strong></p>
+                        <p><strong><i class="fas fa-map-marker-alt" style="color: var(--primary);"></i> Location:</strong></p>
                         <p>${item.location}</p>
                     </div>
                     <div>
-                        <p><strong><i class="fas fa-calendar"></i> Date:</strong></p>
+                        <p><strong><i class="fas fa-calendar" style="color: var(--primary);"></i> Date:</strong></p>
                         <p>${new Date(item.date).toLocaleDateString()}</p>
                     </div>
                     <div>
-                        <p><strong><i class="fas fa-user"></i> Reported by:</strong></p>
+                        <p><strong><i class="fas fa-user" style="color: var(--primary);"></i> Reported by:</strong></p>
                         <p>${item.userName}</p>
                     </div>
                     <div>
-                        <p><strong><i class="fas fa-envelope"></i> Contact:</strong></p>
+                        <p><strong><i class="fas fa-envelope" style="color: var(--primary);"></i> Contact:</strong></p>
                         <p>${item.userEmail}</p>
                     </div>
                 </div>
                 ${currentUser && (currentUser.uid === item.userId || currentUserData.role === 'admin') ? `
-                    <div style="display: flex; gap: 1rem;">
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
                         <button class="btn btn-primary" id="modal-edit-btn">Edit</button>
                         ${item.status !== 'resolved' ? `
                             <button class="btn btn-primary" id="modal-resolve-btn">Mark as Resolved</button>
                         ` : ''}
-                        <button class="btn btn-danger" id="modal-delete-btn">Delete</button>
+                        <button class="btn btn-outline" id="modal-delete-btn" style="border-color: var(--accent); color: var(--accent);">Delete</button>
                     </div>
                 ` : ''}
             `;
@@ -1490,30 +1944,23 @@
                     location: document.getElementById('item-location').value,
                     date: document.getElementById('item-date').value,
                     type: document.getElementById('item-type').value,
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    updatedAt: new Date()
                 };
                 
-                // Handle image upload if a new image is selected
-                const imageFile = document.getElementById('item-image').files[0];
-                if (imageFile) {
-                    const storageRef = storage.ref(`items/${Date.now()}_${imageFile.name}`);
-                    const uploadTask = storageRef.put(imageFile);
-                    
-                    uploadTask.on('state_changed', 
-                        null, 
-                        (error) => {
-                            showNotification('Error uploading image: ' + error.message, 'error');
-                        }, 
-                        () => {
-                            uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                                updatedItem.imageUrl = downloadURL;
-                                updateItemInFirestore(item.id, updatedItem);
-                            });
-                        }
-                    );
-                } else {
-                    updateItemInFirestore(item.id, updatedItem);
+                // Update item in mock database
+                const index = mockAuth.items.findIndex(i => i.id === item.id);
+                if (index !== -1) {
+                    mockAuth.items[index] = { ...mockAuth.items[index], ...updatedItem };
+                    allItems = mockAuth.items;
                 }
+                
+                showNotification('Item updated successfully');
+                itemForm.reset();
+                itemForm.onsubmit = originalSubmitHandler;
+                const cancelBtn = document.getElementById('cancel-edit');
+                if (cancelBtn) cancelBtn.remove();
+                showSection('home');
+                loadFeaturedItems();
             };
             
             // Add a cancel button to reset the form behavior
@@ -1538,50 +1985,31 @@
         // Store the original submit handler
         const originalSubmitHandler = itemForm.onsubmit;
 
-        function updateItemInFirestore(itemId, updatedItem) {
-            db.collection('items').doc(itemId).update(updatedItem)
-                .then(() => {
-                    showNotification('Item updated successfully');
-                    itemForm.reset();
-                    itemForm.onsubmit = originalSubmitHandler;
-                    const cancelBtn = document.getElementById('cancel-edit');
-                    if (cancelBtn) cancelBtn.remove();
-                    showSection('home');
-                    loadFeaturedItems();
-                })
-                .catch((error) => {
-                    showNotification('Error updating item: ' + error.message, 'error');
-                });
-        }
-
         // Mark as Resolved
         function markAsResolved(item) {
-            db.collection('items').doc(item.id).update({
-                status: 'resolved',
-                resolvedAt: firebase.firestore.FieldValue.serverTimestamp()
-            })
-            .then(() => {
-                hideModal(itemModal);
-                showNotification('Item marked as resolved');
-                loadFeaturedItems();
-            })
-            .catch((error) => {
-                showNotification('Error updating item: ' + error.message, 'error');
-            });
+            // Update item in mock database
+            const index = mockAuth.items.findIndex(i => i.id === item.id);
+            if (index !== -1) {
+                mockAuth.items[index].status = 'resolved';
+                mockAuth.items[index].resolvedAt = new Date();
+                allItems = mockAuth.items;
+            }
+            
+            hideModal(itemModal);
+            showNotification('Item marked as resolved');
+            loadFeaturedItems();
         }
 
         // Delete Item
         function deleteItem(item) {
             if (confirm('Are you sure you want to delete this item?')) {
-                db.collection('items').doc(item.id).delete()
-                    .then(() => {
-                        hideModal(itemModal);
-                        showNotification('Item deleted successfully');
-                        loadFeaturedItems();
-                    })
-                    .catch((error) => {
-                        showNotification('Error deleting item: ' + error.message, 'error');
-                    });
+                // Remove item from mock database
+                mockAuth.items = mockAuth.items.filter(i => i.id !== item.id);
+                allItems = mockAuth.items;
+                
+                hideModal(itemModal);
+                showNotification('Item deleted successfully');
+                loadFeaturedItems();
             }
         }
 
@@ -1589,204 +2017,124 @@
         function loadFeaturedItems() {
             featuredItems.innerHTML = '<div class="spinner"></div>';
             
-            db.collection('items')
-                .orderBy('createdAt', 'desc')
-                .limit(12)
-                .get()
-                .then((querySnapshot) => {
-                    allItems = [];
-                    querySnapshot.forEach((doc) => {
-                        allItems.push({ id: doc.id, ...doc.data() });
-                    });
-                    displayItems(allItems, featuredItems);
-                })
-                .catch((error) => {
-                    featuredItems.innerHTML = '<p>Error loading items. Please try again.</p>';
-                    console.error('Error loading items: ', error);
-                });
+            // Simulate loading delay
+            setTimeout(() => {
+                const itemsToShow = [...allItems].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 6);
+                displayItems(itemsToShow, featuredItems);
+            }, 500);
         }
 
         // Load Lost Items
         function loadLostItems() {
             lostItems.innerHTML = '<div class="spinner"></div>';
             
-            db.collection('items')
-                .where('type', '==', 'lost')
-                .where('status', '==', 'active')
-                .orderBy('createdAt', 'desc')
-                .get()
-                .then((querySnapshot) => {
-                    const items = [];
-                    querySnapshot.forEach((doc) => {
-                        items.push({ id: doc.id, ...doc.data() });
-                    });
-                    displayItems(items, lostItems);
-                })
-                .catch((error) => {
-                    lostItems.innerHTML = '<p>Error loading items. Please try again.</p>';
-                    console.error('Error loading items: ', error);
-                });
+            // Simulate loading delay
+            setTimeout(() => {
+                const lostItemsFiltered = allItems.filter(item => item.type === 'lost' && item.status === 'active');
+                displayItems(lostItemsFiltered, lostItems);
+            }, 500);
         }
 
         // Load Found Items
         function loadFoundItems() {
             foundItems.innerHTML = '<div class="spinner"></div>';
             
-            db.collection('items')
-                .where('type', '==', 'found')
-                .where('status', '==', 'active')
-                .orderBy('createdAt', 'desc')
-                .get()
-                .then((querySnapshot) => {
-                    const items = [];
-                    querySnapshot.forEach((doc) => {
-                        items.push({ id: doc.id, ...doc.data() });
-                    });
-                    displayItems(items, foundItems);
-                })
-                .catch((error) => {
-                    foundItems.innerHTML = '<p>Error loading items. Please try again.</p>';
-                    console.error('Error loading items: ', error);
-                });
+            // Simulate loading delay
+            setTimeout(() => {
+                const foundItemsFiltered = allItems.filter(item => item.type === 'found' && item.status === 'active');
+                displayItems(foundItemsFiltered, foundItems);
+            }, 500);
         }
 
         // Load Dashboard Data
         function loadDashboardData() {
             // Load stats
-            Promise.all([
-                db.collection('items').get(),
-                db.collection('items').where('status', '==', 'resolved').get(),
-                db.collection('users').get()
-            ]).then((results) => {
-                totalItems.textContent = results[0].size;
-                resolvedItems.textContent = results[1].size;
-                usersCount.textContent = results[2].size;
-            }).catch((error) => {
-                console.error('Error loading stats: ', error);
-            });
+            totalItems.textContent = allItems.length;
+            resolvedItems.textContent = allItems.filter(item => item.status === 'resolved').length;
+            usersCount.textContent = allUsers.length;
             
             // Load all items for admin
             adminItems.innerHTML = '<div class="spinner"></div>';
             
-            db.collection('items')
-                .orderBy('createdAt', 'desc')
-                .get()
-                .then((querySnapshot) => {
-                    const items = [];
-                    querySnapshot.forEach((doc) => {
-                        items.push({ id: doc.id, ...doc.data() });
-                    });
-                    displayItems(items, adminItems);
-                })
-                .catch((error) => {
-                    adminItems.innerHTML = '<p>Error loading items. Please try again.</p>';
-                    console.error('Error loading items: ', error);
-                });
+            // Simulate loading delay
+            setTimeout(() => {
+                displayItems(allItems, adminItems);
+            }, 500);
             
             // Load users
             usersTable.innerHTML = '<tr><td colspan="4" style="text-align: center;">Loading users...</td></tr>';
             
-            db.collection('users')
-                .get()
-                .then((querySnapshot) => {
-                    allUsers = [];
-                    usersTable.innerHTML = '';
+            // Simulate loading delay
+            setTimeout(() => {
+                usersTable.innerHTML = '';
+                
+                if (allUsers.length === 0) {
+                    usersTable.innerHTML = '<tr><td colspan="4" style="text-align: center;">No users found.</td></tr>';
+                    return;
+                }
+                
+                allUsers.forEach(user => {
+                    const tr = document.createElement('tr');
+                    tr.style.borderBottom = '1px solid var(--border)';
+                    tr.innerHTML = `
+                        <td style="padding: 0.75rem;">${user.firstName} ${user.lastName}</td>
+                        <td style="padding: 0.75rem;">${user.email}</td>
+                        <td style="padding: 0.75rem;">${user.role}</td>
+                        <td style="padding: 0.75rem;">
+                            ${user.role !== 'admin' ? `
+                                <button class="btn btn-primary btn-sm make-admin" data-id="${user.id}">Make Admin</button>
+                            ` : ''}
+                        </td>
+                    `;
                     
-                    if (querySnapshot.empty) {
-                        usersTable.innerHTML = '<tr><td colspan="4" style="text-align: center;">No users found.</td></tr>';
-                        return;
-                    }
-                    
-                    querySnapshot.forEach((doc) => {
-                        const user = { id: doc.id, ...doc.data() };
-                        allUsers.push(user);
-                        
-                        const tr = document.createElement('tr');
-                        tr.style.borderBottom = '1px solid var(--border)';
-                        tr.innerHTML = `
-                            <td style="padding: 0.75rem;">${user.firstName} ${user.lastName}</td>
-                            <td style="padding: 0.75rem;">${user.email}</td>
-                            <td style="padding: 0.75rem;">${user.role}</td>
-                            <td style="padding: 0.75rem;">
-                                ${user.role !== 'admin' ? `
-                                    <button class="btn btn-primary make-admin" data-id="${user.id}">Make Admin</button>
-                                ` : ''}
-                            </td>
-                        `;
-                        
-                        usersTable.appendChild(tr);
-                    });
-                    
-                    // Add event listeners to make admin buttons
-                    document.querySelectorAll('.make-admin').forEach(button => {
-                        button.addEventListener('click', (e) => {
-                            const userId = e.target.dataset.id;
-                            makeUserAdmin(userId);
-                        });
-                    });
-                })
-                .catch((error) => {
-                    usersTable.innerHTML = '<tr><td colspan="4" style="text-align: center;">Error loading users.</td></tr>';
-                    console.error('Error loading users: ', error);
+                    usersTable.appendChild(tr);
                 });
+                
+                // Add event listeners to make admin buttons
+                document.querySelectorAll('.make-admin').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const userId = e.target.dataset.id;
+                        makeUserAdmin(userId);
+                    });
+                });
+            }, 500);
         }
 
         // Make User Admin
         function makeUserAdmin(userId) {
-            db.collection('users').doc(userId).update({
-                role: 'admin'
-            })
-            .then(() => {
+            // Update user in mock database
+            const index = allUsers.findIndex(u => u.id === userId);
+            if (index !== -1) {
+                allUsers[index].role = 'admin';
                 showNotification('User promoted to admin successfully');
                 loadDashboardData(); // Reload dashboard data
-            })
-            .catch((error) => {
-                showNotification('Error promoting user: ' + error.message, 'error');
-            });
-        }
-
-        // Auth State Listener
-        auth.onAuthStateChanged((user) => {
-            currentUser = user;
-            
-            if (user) {
-                // User is signed in
-                authButtons.style.display = 'none';
-                userMenu.style.display = 'flex';
-                
-                // Get user data from Firestore
-                db.collection('users').doc(user.uid).get()
-                    .then((doc) => {
-                        if (doc.exists) {
-                            currentUserData = doc.data();
-                            userName.textContent = currentUserData.firstName;
-                            
-                            // Show admin dashboard link if user is admin
-                            if (currentUserData.role === 'admin') {
-                                navDashboard.style.display = 'block';
-                            } else {
-                                navDashboard.style.display = 'none';
-                            }
-                        }
-                    })
-                    .catch((error) => {
-                        console.error('Error getting user data: ', error);
-                    });
             } else {
-                // User is signed out
-                authButtons.style.display = 'flex';
-                userMenu.style.display = 'none';
-                navDashboard.style.display = 'none';
-                currentUserData = null;
+                showNotification('Error promoting user', 'error');
             }
-            
-            // Load featured items when auth state changes
-            loadFeaturedItems();
-        });
+        }
 
         // Initialize the app
         showSection('home');
         loadFeaturedItems();
+
+        // Demo login for testing
+        const demoLoginBtn = document.createElement('button');
+        demoLoginBtn.textContent = 'Demo Login';
+        demoLoginBtn.className = 'btn btn-primary';
+        demoLoginBtn.style.position = 'fixed';
+        demoLoginBtn.style.bottom = '20px';
+        demoLoginBtn.style.right = '20px';
+        demoLoginBtn.style.zIndex = '1000';
+        demoLoginBtn.addEventListener('click', () => {
+            currentUser = { uid: 'sample-user3', email: 'admin@university.edu' };
+            currentUserData = allUsers.find(u => u.id === 'sample-user3');
+            authButtons.style.display = 'none';
+            userMenu.style.display = 'flex';
+            userName.textContent = currentUserData.firstName;
+            navDashboard.style.display = 'block';
+            showNotification('Logged in as Admin (Demo)');
+        });
+        document.body.appendChild(demoLoginBtn);
     </script>
 </body>
 </html>
