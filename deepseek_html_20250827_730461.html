@@ -1,0 +1,1792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item Track - Campus Lost & Found</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #fca311;
+            --info: #4895ef;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --background: #ffffff;
+            --text: #333333;
+            --card-bg: #ffffff;
+            --border: #dee2e6;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode {
+            --background: #121212;
+            --text: #f8f9fa;
+            --card-bg: #1e1e1e;
+            --border: #2d2d2d;
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Header & Navigation */
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            margin-right: 0.5rem;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+
+        nav ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid white;
+            color: white;
+        }
+
+        .btn-outline:hover {
+            background-color: white;
+            color: var(--primary);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+            margin-left: 1rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem 0;
+            min-height: calc(100vh - 180px);
+        }
+
+        .hero {
+            text-align: center;
+            padding: 3rem 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .animated-svg {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 300px;
+            height: 200px;
+            opacity: 0.7;
+            z-index: 1;
+        }
+
+        /* Search Section */
+        .search-section {
+            background-color: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .search-form {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 1rem;
+            align-items: end;
+        }
+
+        @media (max-width: 768px) {
+            .search-form {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background-color: var(--card-bg);
+            color: var(--text);
+        }
+
+        /* Items Grid */
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .item-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px var(--shadow);
+            transition: transform 0.3s;
+        }
+
+        .item-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .item-image {
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .item-card:hover .item-image img {
+            transform: scale(1.05);
+        }
+
+        .item-content {
+            padding: 1.5rem;
+        }
+
+        .item-status {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-lost {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .status-found {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .status-resolved {
+            background-color: var(--info);
+            color: white;
+        }
+
+        .item-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .item-details {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .item-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            margin: 2rem auto;
+            padding: 2rem;
+            border-radius: 8px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text);
+        }
+
+        /* Forms */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        @media (max-width: 576px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Notifications */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1100;
+        }
+
+        .notification {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px var(--shadow);
+            animation: slideIn 0.3s forwards;
+        }
+
+        .notification-success {
+            background-color: var(--success);
+        }
+
+        .notification-error {
+            background-color: var(--danger);
+        }
+
+        .notification-info {
+            background-color: var(--info);
+        }
+
+        .close-notification {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            margin-left: 1rem;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--primary);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Admin Dashboard */
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background-color: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px var(--shadow);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            nav ul {
+                margin-top: 1rem;
+                justify-content: center;
+            }
+
+            .user-actions {
+                margin-top: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .animated-svg {
+                display: none;
+            }
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left: 4px solid var(--primary);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Animation for SVG elements */
+        .svg-animate path {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: dash 5s linear forwards infinite;
+        }
+
+        @keyframes dash {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Navigation -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-search"></i>
+                <span>Item Track</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" id="nav-home">Home</a></li>
+                    <li><a href="#" id="nav-lost">Lost Items</a></li>
+                    <li><a href="#" id="nav-found">Found Items</a></li>
+                    <li><a href="#" id="nav-post">Post Item</a></li>
+                    <li><a href="#" id="nav-dashboard" style="display: none;">Dashboard</a></li>
+                </ul>
+            </nav>
+            <div class="user-actions">
+                <div id="auth-buttons">
+                    <a href="#" class="btn btn-outline" id="login-btn">Login</a>
+                    <a href="#" class="btn btn-primary" id="signup-btn">Sign Up</a>
+                </div>
+                <div id="user-menu" style="display: none;">
+                    <a href="#" class="btn btn-outline" id="profile-btn">
+                        <i class="fas fa-user"></i>
+                        <span id="user-name"></span>
+                    </a>
+                    <a href="#" class="btn btn-outline" id="logout-btn">Logout</a>
+                </div>
+                <button class="theme-toggle" id="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container main-content">
+        <!-- Hero Section -->
+        <section id="home-section">
+            <div class="hero">
+                <div class="hero-content">
+                    <h1>Lost Something on Campus?</h1>
+                    <p>Item Track helps you report and search for lost items across the university campus.</p>
+                    <a href="#" class="btn btn-primary" id="hero-post-btn">Report an Item</a>
+                </div>
+                <div class="animated-svg float-animation">
+                    <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+                        <g stroke-width="10" fill="none" stroke="#fff">
+                            <path d="M250,100 C150,100 100,150 100,250 C100,350 150,400 250,400 C350,400 400,350 400,250 C400,150 350,100 250,100 Z" class="svg-animate"/>
+                            <path d="M200,200 L300,300" class="svg-animate"/>
+                            <path d="M300,200 L200,300" class="svg-animate"/>
+                            <circle cx="250" cy="250" r="150" stroke-width="2" opacity="0.2" class="svg-animate"/>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Search Section -->
+            <div class="search-section">
+                <h2>Search for Items</h2>
+                <div class="search-form">
+                    <div class="form-group">
+                        <label for="search-keyword">Search by Keyword</label>
+                        <input type="text" id="search-keyword" class="form-control" placeholder="Enter item name or description...">
+                    </div>
+                    <div class="form-group">
+                        <label for="search-category">Category</label>
+                        <select id="search-category" class="form-control">
+                            <option value="">All Categories</option>
+                            <option value="electronics">Electronics</option>
+                            <option value="clothing">Clothing</option>
+                            <option value="books">Books & Notes</option>
+                            <option value="accessories">Accessories</option>
+                            <option value="documents">Documents</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="search-type">Item Type</label>
+                        <select id="search-type" class="form-control">
+                            <option value="">All Types</option>
+                            <option value="lost">Lost Items</option>
+                            <option value="found">Found Items</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn btn-primary" id="search-btn">Search</button>
+            </div>
+
+            <!-- Featured Items -->
+            <h2>Recently Reported Items</h2>
+            <div class="items-grid" id="featured-items">
+                <!-- Items will be populated by JavaScript -->
+                <div class="spinner" id="loading-spinner"></div>
+            </div>
+        </section>
+
+        <!-- Lost Items Section -->
+        <section id="lost-section" style="display: none;">
+            <h2>Lost Items</h2>
+            <div class="items-grid" id="lost-items">
+                <!-- Items will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Found Items Section -->
+        <section id="found-section" style="display: none;">
+            <h2>Found Items</h2>
+            <div class="items-grid" id="found-items">
+                <!-- Items will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Post Item Section -->
+        <section id="post-section" style="display: none;">
+            <h2>Report a Lost or Found Item</h2>
+            <div class="search-section">
+                <form id="item-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="item-title">Item Title *</label>
+                            <input type="text" id="item-title" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="item-category">Category *</label>
+                            <select id="item-category" class="form-control" required>
+                                <option value="">Select Category</option>
+                                <option value="electronics">Electronics</option>
+                                <option value="clothing">Clothing</option>
+                                <option value="books">Books & Notes</option>
+                                <option value="accessories">Accessories</option>
+                                <option value="documents">Documents</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="item-description">Description *</label>
+                        <textarea id="item-description" class="form-control" rows="4" required></textarea>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="item-location">Location *</label>
+                            <input type="text" id="item-location" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="item-date">Date *</label>
+                            <input type="date" id="item-date" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="item-type">Item Type *</label>
+                            <select id="item-type" class="form-control" required>
+                                <option value="">Select Type</option>
+                                <option value="lost">Lost Item</option>
+                                <option value="found">Found Item</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="item-image">Upload Image</label>
+                            <input type="file" id="item-image" accept="image/*">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Report</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Admin Dashboard Section -->
+        <section id="dashboard-section" style="display: none;">
+            <h2>Admin Dashboard</h2>
+            
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="total-items">0</div>
+                    <div class="stat-label">Total Items</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="resolved-items">0</div>
+                    <div class="stat-label">Resolved Cases</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="users-count">0</div>
+                    <div class="stat-label">Registered Users</div>
+                </div>
+            </div>
+
+            <div class="search-section">
+                <h3>Manage Items</h3>
+                <div class="items-grid" id="admin-items">
+                    <!-- Admin items will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="search-section">
+                <h3>Manage Users</h3>
+                <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid var(--border);">
+                            <th style="text-align: left; padding: 0.75rem;">User</th>
+                            <th style="text-align: left; padding: 0.75rem;">Email</th>
+                            <th style="text-align: left; padding: 0.75rem;">Role</th>
+                            <th style="text-align: left; padding: 0.75rem;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-table">
+                        <!-- Users will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Item Detail Modal -->
+        <div class="modal" id="item-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modal-title">Item Details</h2>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div id="modal-body">
+                    <!-- Content will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Login Modal -->
+        <div class="modal" id="login-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Login</h2>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+                <p style="margin-top: 1rem;">
+                    <a href="#" id="forgot-password">Forgot Password?</a>
+                </p>
+                <p style="margin-top: 1rem;">
+                    Don't have an account? <a href="#" id="show-signup">Sign Up</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Signup Modal -->
+        <div class="modal" id="signup-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Create Account</h2>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <form id="signup-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="signup-fname">First Name</label>
+                            <input type="text" id="signup-fname" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-lname">Last Name</label>
+                            <input type="text" id="signup-lname" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-email">Email</label>
+                        <input type="email" id="signup-email" class="form-control" required>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="signup-password">Password</label>
+                            <input type="password" id="signup-password" class="form-control" required minlength="6">
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-confirm">Confirm Password</label>
+                            <input type="password" id="signup-confirm" class="form-control" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create Account</button>
+                </form>
+                <p style="margin-top: 1rem;">
+                    Already have an account? <a href="#" id="show-login">Login</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Forgot Password Modal -->
+        <div class="modal" id="forgot-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Reset Password</h2>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <form id="forgot-form">
+                    <div class="form-group">
+                        <label for="forgot-email">Email</label>
+                        <input type="email" id="forgot-email" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send Reset Link</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Notification Container -->
+    <div class="notification-container" id="notification-container"></div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-section">
+                <h3>Item Track</h3>
+                <p>Helping reunite lost items with their owners since 2023.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul style="list-style: none;">
+                    <li><a href="#" style="color: white;">Home</a></li>
+                    <li><a href="#" style="color: white;">Report Lost Item</a></li>
+                    <li><a href="#" style="color: white;">Report Found Item</a></li>
+                    <li><a href="#" style="color: white;">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Info</h3>
+                <p><i class="fas fa-map-marker-alt"></i> University Campus, Building A</p>
+                <p><i class="fas fa-envelope"></i> itemtrack@university.edu</p>
+                <p><i class="fas fa-phone"></i> (123) 456-7890</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 Item Track. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+
+    <script>
+        // Firebase configuration - Replace with your actual config
+        const firebaseConfig = {
+  apiKey: "AIzaSyDd3-4Zy_RgAD9EyjLz6rCFnFdaL5IfiuU",
+  authDomain: "clearpass-otitu.firebaseapp.com",
+  databaseURL: "https://clearpass-otitu-default-rtdb.firebaseio.com",
+  projectId: "clearpass-otitu",
+  storageBucket: "clearpass-otitu.firebasestorage.app",
+  messagingSenderId: "239983223329",
+  appId: "1:239983223329:web:707360fc322727aa9c3960",
+  measurementId: "G-ZDQQNG81XB"
+};
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        // DOM Elements
+        const themeToggle = document.getElementById('theme-toggle');
+        const notificationContainer = document.getElementById('notification-container');
+        
+        // Navigation Elements
+        const navHome = document.getElementById('nav-home');
+        const navLost = document.getElementById('nav-lost');
+        const navFound = document.getElementById('nav-found');
+        const navPost = document.getElementById('nav-post');
+        const navDashboard = document.getElementById('nav-dashboard');
+        
+        // Section Elements
+        const homeSection = document.getElementById('home-section');
+        const lostSection = document.getElementById('lost-section');
+        const foundSection = document.getElementById('found-section');
+        const postSection = document.getElementById('post-section');
+        const dashboardSection = document.getElementById('dashboard-section');
+        
+        // Auth Elements
+        const authButtons = document.getElementById('auth-buttons');
+        const userMenu = document.getElementById('user-menu');
+        const userName = document.getElementById('user-name');
+        const loginBtn = document.getElementById('login-btn');
+        const signupBtn = document.getElementById('signup-btn');
+        const profileBtn = document.getElementById('profile-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        
+        // Modal Elements
+        const loginModal = document.getElementById('login-modal');
+        const signupModal = document.getElementById('signup-modal');
+        const forgotModal = document.getElementById('forgot-modal');
+        const itemModal = document.getElementById('item-modal');
+        const closeModalButtons = document.querySelectorAll('.close-modal');
+        
+        // Form Elements
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+        const forgotForm = document.getElementById('forgot-form');
+        const itemForm = document.getElementById('item-form');
+        
+        // Other UI Elements
+        const heroPostBtn = document.getElementById('hero-post-btn');
+        const showSignup = document.getElementById('show-signup');
+        const showLogin = document.getElementById('show-login');
+        const forgotPassword = document.getElementById('forgot-password');
+        const searchBtn = document.getElementById('search-btn');
+        
+        // Items Containers
+        const featuredItems = document.getElementById('featured-items');
+        const lostItems = document.getElementById('lost-items');
+        const foundItems = document.getElementById('found-items');
+        const adminItems = document.getElementById('admin-items');
+        
+        // Dashboard Elements
+        const totalItems = document.getElementById('total-items');
+        const resolvedItems = document.getElementById('resolved-items');
+        const usersCount = document.getElementById('users-count');
+        const usersTable = document.getElementById('users-table');
+
+        // Global Variables
+        let currentUser = null;
+        let currentUserData = null;
+        let allItems = [];
+        let allUsers = [];
+
+        // Theme Toggle
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const icon = themeToggle.querySelector('i');
+            if (document.body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Check saved theme
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+            const icon = themeToggle.querySelector('i');
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+        }
+
+        // Show Notification
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = `
+                <span>${message}</span>
+                <button class="close-notification">&times;</button>
+            `;
+            
+            notificationContainer.appendChild(notification);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.style.animation = 'slideIn 0.3s reverse forwards';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notificationContainer.removeChild(notification);
+                        }
+                    }, 300);
+                }
+            }, 5000);
+            
+            // Close button event
+            notification.querySelector('.close-notification').addEventListener('click', () => {
+                notification.style.animation = 'slideIn 0.3s reverse forwards';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notificationContainer.removeChild(notification);
+                    }
+                }, 300);
+            });
+        }
+
+        // Show Modal
+        function showModal(modal) {
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Hide Modal
+        function hideModal(modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modals when clicking on X
+        closeModalButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const modal = button.closest('.modal');
+                hideModal(modal);
+            });
+        });
+
+        // Close modals when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                hideModal(e.target);
+            }
+        });
+
+        // Navigation Events
+        navHome.addEventListener('click', (e) => {
+            e.preventDefault();
+            showSection('home');
+            loadFeaturedItems();
+        });
+
+        navLost.addEventListener('click', (e) => {
+            e.preventDefault();
+            showSection('lost');
+            loadLostItems();
+        });
+
+        navFound.addEventListener('click', (e) => {
+            e.preventDefault();
+            showSection('found');
+            loadFoundItems();
+        });
+
+        navPost.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (!currentUser) {
+                showNotification('Please login to report an item', 'error');
+                showModal(loginModal);
+                return;
+            }
+            showSection('post');
+        });
+
+        navDashboard.addEventListener('click', (e) => {
+            e.preventDefault();
+            showSection('dashboard');
+            loadDashboardData();
+        });
+
+        // Auth Button Events
+        loginBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            showModal(loginModal);
+        });
+
+        signupBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            showModal(signupModal);
+        });
+
+        logoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            auth.signOut();
+            showNotification('Logged out successfully');
+        });
+
+        // Form Links Events
+        showSignup.addEventListener('click', (e) => {
+            e.preventDefault();
+            hideModal(loginModal);
+            showModal(signupModal);
+        });
+
+        showLogin.addEventListener('click', (e) => {
+            e.preventDefault();
+            hideModal(signupModal);
+            showModal(loginModal);
+        });
+
+        forgotPassword.addEventListener('click', (e) => {
+            e.preventDefault();
+            hideModal(loginModal);
+            showModal(forgotModal);
+        });
+
+        heroPostBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (!currentUser) {
+                showNotification('Please login to report an item', 'error');
+                showModal(loginModal);
+                return;
+            }
+            showSection('post');
+        });
+
+        // Form Submissions
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    hideModal(loginModal);
+                    showNotification('Logged in successfully');
+                    loginForm.reset();
+                })
+                .catch((error) => {
+                    showNotification(error.message, 'error');
+                });
+        });
+
+        signupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const firstName = document.getElementById('signup-fname').value;
+            const lastName = document.getElementById('signup-lname').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const confirmPassword = document.getElementById('signup-confirm').value;
+            
+            if (password !== confirmPassword) {
+                showNotification('Passwords do not match', 'error');
+                return;
+            }
+            
+            auth.createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    
+                    // Create user document in Firestore
+                    return db.collection('users').doc(user.uid).set({
+                        firstName: firstName,
+                        lastName: lastName,
+                        email: email,
+                        role: 'user',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                })
+                .then(() => {
+                    hideModal(signupModal);
+                    showNotification('Account created successfully. Please verify your email.');
+                    signupForm.reset();
+                    
+                    // Send verification email
+                    auth.currentUser.sendEmailVerification();
+                })
+                .catch((error) => {
+                    showNotification(error.message, 'error');
+                });
+        });
+
+        forgotForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('forgot-email').value;
+            
+            auth.sendPasswordResetEmail(email)
+                .then(() => {
+                    hideModal(forgotModal);
+                    showNotification('Password reset email sent');
+                    forgotForm.reset();
+                })
+                .catch((error) => {
+                    showNotification(error.message, 'error');
+                });
+        });
+
+        itemForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (!currentUser) {
+                showNotification('Please login to report an item', 'error');
+                showModal(loginModal);
+                return;
+            }
+            
+            const title = document.getElementById('item-title').value;
+            const category = document.getElementById('item-category').value;
+            const description = document.getElementById('item-description').value;
+            const location = document.getElementById('item-location').value;
+            const date = document.getElementById('item-date').value;
+            const type = document.getElementById('item-type').value;
+            const imageFile = document.getElementById('item-image').files[0];
+            
+            // Create item object
+            const item = {
+                title: title,
+                category: category,
+                description: description,
+                location: location,
+                date: date,
+                type: type,
+                status: 'active',
+                userId: currentUser.uid,
+                userEmail: currentUser.email,
+                userName: `${currentUserData.firstName} ${currentUserData.lastName}`,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+            
+            // Upload image if exists
+            if (imageFile) {
+                const storageRef = storage.ref(`items/${Date.now()}_${imageFile.name}`);
+                const uploadTask = storageRef.put(imageFile);
+                
+                uploadTask.on('state_changed', 
+                    (snapshot) => {
+                        // Progress monitoring can be added here
+                    }, 
+                    (error) => {
+                        showNotification('Error uploading image: ' + error.message, 'error');
+                    }, 
+                    () => {
+                        // Get download URL
+                        uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                            item.imageUrl = downloadURL;
+                            saveItemToFirestore(item);
+                        });
+                    }
+                );
+            } else {
+                saveItemToFirestore(item);
+            }
+        });
+
+        function saveItemToFirestore(item) {
+            db.collection('items').add(item)
+                .then((docRef) => {
+                    showNotification('Item reported successfully');
+                    itemForm.reset();
+                    showSection('home');
+                    loadFeaturedItems();
+                })
+                .catch((error) => {
+                    showNotification('Error reporting item: ' + error.message, 'error');
+                });
+        }
+
+        searchBtn.addEventListener('click', () => {
+            const keyword = document.getElementById('search-keyword').value.toLowerCase();
+            const category = document.getElementById('search-category').value;
+            const type = document.getElementById('search-type').value;
+            
+            // Filter items based on search criteria
+            const filteredItems = allItems.filter(item => {
+                let matches = true;
+                
+                if (keyword && !item.title.toLowerCase().includes(keyword) && 
+                    !item.description.toLowerCase().includes(keyword)) {
+                    matches = false;
+                }
+                
+                if (category && item.category !== category) {
+                    matches = false;
+                }
+                
+                if (type && item.type !== type) {
+                    matches = false;
+                }
+                
+                return matches;
+            });
+            
+            displayItems(filteredItems, featuredItems);
+        });
+
+        // Show Section Function
+        function showSection(section) {
+            // Hide all sections
+            homeSection.style.display = 'none';
+            lostSection.style.display = 'none';
+            foundSection.style.display = 'none';
+            postSection.style.display = 'none';
+            dashboardSection.style.display = 'none';
+            
+            // Show the requested section
+            switch(section) {
+                case 'home':
+                    homeSection.style.display = 'block';
+                    break;
+                case 'lost':
+                    lostSection.style.display = 'block';
+                    break;
+                case 'found':
+                    foundSection.style.display = 'block';
+                    break;
+                case 'post':
+                    postSection.style.display = 'block';
+                    break;
+                case 'dashboard':
+                    dashboardSection.style.display = 'block';
+                    break;
+            }
+        }
+
+        // Display Items Function
+        function displayItems(items, container) {
+            container.innerHTML = '';
+            
+            if (items.length === 0) {
+                container.innerHTML = '<p>No items found.</p>';
+                return;
+            }
+            
+            items.forEach(item => {
+                const itemCard = document.createElement('div');
+                itemCard.className = 'item-card';
+                itemCard.dataset.id = item.id;
+                
+                const statusClass = item.status === 'resolved' ? 'status-resolved' : 
+                                  item.type === 'lost' ? 'status-lost' : 'status-found';
+                const statusText = item.status === 'resolved' ? 'Resolved' : 
+                                  item.type === 'lost' ? 'Lost' : 'Found';
+                
+                itemCard.innerHTML = `
+                    <div class="item-image">
+                        <img src="${item.imageUrl || 'https://via.placeholder.com/300x200?text=No+Image'}" alt="${item.title}">
+                    </div>
+                    <div class="item-content">
+                        <span class="item-status ${statusClass}">${statusText}</span>
+                        <h3 class="item-title">${item.title}</h3>
+                        <div class="item-details">
+                            <p><i class="fas fa-tag"></i> ${item.category}</p>
+                            <p><i class="fas fa-map-marker-alt"></i> ${item.location}</p>
+                            <p><i class="fas fa-calendar"></i> ${new Date(item.date).toLocaleDateString()}</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn btn-primary view-item">View Details</button>
+                            ${currentUser && (currentUser.uid === item.userId || currentUserData.role === 'admin') ? `
+                                <button class="btn btn-outline edit-item">Edit</button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(itemCard);
+                
+                // Add event listener to view button
+                itemCard.querySelector('.view-item').addEventListener('click', () => {
+                    showItemDetails(item);
+                });
+                
+                // Add event listener to edit button if exists
+                const editBtn = itemCard.querySelector('.edit-item');
+                if (editBtn) {
+                    editBtn.addEventListener('click', () => {
+                        editItem(item);
+                    });
+                }
+            });
+        }
+
+        // Show Item Details
+        function showItemDetails(item) {
+            const modalTitle = document.getElementById('modal-title');
+            const modalBody = document.getElementById('modal-body');
+            
+            modalTitle.textContent = item.title;
+            
+            const statusClass = item.status === 'resolved' ? 'status-resolved' : 
+                              item.type === 'lost' ? 'status-lost' : 'status-found';
+            const statusText = item.status === 'resolved' ? 'Resolved' : 
+                              item.type === 'lost' ? 'Lost' : 'Found';
+            
+            modalBody.innerHTML = `
+                <div style="margin-bottom: 1.5rem;">
+                    <img src="${item.imageUrl || 'https://via.placeholder.com/500x300?text=No+Image'}" 
+                         alt="${item.title}" style="width: 100%; border-radius: 8px;">
+                </div>
+                <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                    <span class="item-status ${statusClass}">${statusText}</span>
+                    <span class="item-status" style="background: #6c757d; color: white;">${item.category}</span>
+                </div>
+                <p style="margin-bottom: 1rem;">${item.description}</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                    <div>
+                        <p><strong><i class="fas fa-map-marker-alt"></i> Location:</strong></p>
+                        <p>${item.location}</p>
+                    </div>
+                    <div>
+                        <p><strong><i class="fas fa-calendar"></i> Date:</strong></p>
+                        <p>${new Date(item.date).toLocaleDateString()}</p>
+                    </div>
+                    <div>
+                        <p><strong><i class="fas fa-user"></i> Reported by:</strong></p>
+                        <p>${item.userName}</p>
+                    </div>
+                    <div>
+                        <p><strong><i class="fas fa-envelope"></i> Contact:</strong></p>
+                        <p>${item.userEmail}</p>
+                    </div>
+                </div>
+                ${currentUser && (currentUser.uid === item.userId || currentUserData.role === 'admin') ? `
+                    <div style="display: flex; gap: 1rem;">
+                        <button class="btn btn-primary" id="modal-edit-btn">Edit</button>
+                        ${item.status !== 'resolved' ? `
+                            <button class="btn btn-primary" id="modal-resolve-btn">Mark as Resolved</button>
+                        ` : ''}
+                        <button class="btn btn-danger" id="modal-delete-btn">Delete</button>
+                    </div>
+                ` : ''}
+            `;
+            
+            showModal(itemModal);
+            
+            // Add event listeners to buttons if they exist
+            const editBtn = document.getElementById('modal-edit-btn');
+            const resolveBtn = document.getElementById('modal-resolve-btn');
+            const deleteBtn = document.getElementById('modal-delete-btn');
+            
+            if (editBtn) {
+                editBtn.addEventListener('click', () => {
+                    hideModal(itemModal);
+                    editItem(item);
+                });
+            }
+            
+            if (resolveBtn) {
+                resolveBtn.addEventListener('click', () => {
+                    markAsResolved(item);
+                });
+            }
+            
+            if (deleteBtn) {
+                deleteBtn.addEventListener('click', () => {
+                    deleteItem(item);
+                });
+            }
+        }
+
+        // Edit Item
+        function editItem(item) {
+            // Populate the form with item data
+            document.getElementById('item-title').value = item.title;
+            document.getElementById('item-category').value = item.category;
+            document.getElementById('item-description').value = item.description;
+            document.getElementById('item-location').value = item.location;
+            document.getElementById('item-date').value = item.date;
+            document.getElementById('item-type').value = item.type;
+            
+            // Show the post section
+            showSection('post');
+            
+            // Change form submit handler to update instead of create
+            itemForm.onsubmit = (e) => {
+                e.preventDefault();
+                
+                const updatedItem = {
+                    title: document.getElementById('item-title').value,
+                    category: document.getElementById('item-category').value,
+                    description: document.getElementById('item-description').value,
+                    location: document.getElementById('item-location').value,
+                    date: document.getElementById('item-date').value,
+                    type: document.getElementById('item-type').value,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                
+                // Handle image upload if a new image is selected
+                const imageFile = document.getElementById('item-image').files[0];
+                if (imageFile) {
+                    const storageRef = storage.ref(`items/${Date.now()}_${imageFile.name}`);
+                    const uploadTask = storageRef.put(imageFile);
+                    
+                    uploadTask.on('state_changed', 
+                        null, 
+                        (error) => {
+                            showNotification('Error uploading image: ' + error.message, 'error');
+                        }, 
+                        () => {
+                            uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                                updatedItem.imageUrl = downloadURL;
+                                updateItemInFirestore(item.id, updatedItem);
+                            });
+                        }
+                    );
+                } else {
+                    updateItemInFirestore(item.id, updatedItem);
+                }
+            };
+            
+            // Add a cancel button to reset the form behavior
+            const existingCancelBtn = document.getElementById('cancel-edit');
+            if (!existingCancelBtn) {
+                const cancelBtn = document.createElement('button');
+                cancelBtn.type = 'button';
+                cancelBtn.textContent = 'Cancel Edit';
+                cancelBtn.className = 'btn btn-outline';
+                cancelBtn.id = 'cancel-edit';
+                cancelBtn.style.marginLeft = '1rem';
+                cancelBtn.addEventListener('click', () => {
+                    itemForm.reset();
+                    itemForm.onsubmit = originalSubmitHandler;
+                    cancelBtn.remove();
+                });
+                
+                itemForm.querySelector('button[type="submit"]').after(cancelBtn);
+            }
+        }
+
+        // Store the original submit handler
+        const originalSubmitHandler = itemForm.onsubmit;
+
+        function updateItemInFirestore(itemId, updatedItem) {
+            db.collection('items').doc(itemId).update(updatedItem)
+                .then(() => {
+                    showNotification('Item updated successfully');
+                    itemForm.reset();
+                    itemForm.onsubmit = originalSubmitHandler;
+                    const cancelBtn = document.getElementById('cancel-edit');
+                    if (cancelBtn) cancelBtn.remove();
+                    showSection('home');
+                    loadFeaturedItems();
+                })
+                .catch((error) => {
+                    showNotification('Error updating item: ' + error.message, 'error');
+                });
+        }
+
+        // Mark as Resolved
+        function markAsResolved(item) {
+            db.collection('items').doc(item.id).update({
+                status: 'resolved',
+                resolvedAt: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .then(() => {
+                hideModal(itemModal);
+                showNotification('Item marked as resolved');
+                loadFeaturedItems();
+            })
+            .catch((error) => {
+                showNotification('Error updating item: ' + error.message, 'error');
+            });
+        }
+
+        // Delete Item
+        function deleteItem(item) {
+            if (confirm('Are you sure you want to delete this item?')) {
+                db.collection('items').doc(item.id).delete()
+                    .then(() => {
+                        hideModal(itemModal);
+                        showNotification('Item deleted successfully');
+                        loadFeaturedItems();
+                    })
+                    .catch((error) => {
+                        showNotification('Error deleting item: ' + error.message, 'error');
+                    });
+            }
+        }
+
+        // Load Featured Items
+        function loadFeaturedItems() {
+            featuredItems.innerHTML = '<div class="spinner"></div>';
+            
+            db.collection('items')
+                .orderBy('createdAt', 'desc')
+                .limit(12)
+                .get()
+                .then((querySnapshot) => {
+                    allItems = [];
+                    querySnapshot.forEach((doc) => {
+                        allItems.push({ id: doc.id, ...doc.data() });
+                    });
+                    displayItems(allItems, featuredItems);
+                })
+                .catch((error) => {
+                    featuredItems.innerHTML = '<p>Error loading items. Please try again.</p>';
+                    console.error('Error loading items: ', error);
+                });
+        }
+
+        // Load Lost Items
+        function loadLostItems() {
+            lostItems.innerHTML = '<div class="spinner"></div>';
+            
+            db.collection('items')
+                .where('type', '==', 'lost')
+                .where('status', '==', 'active')
+                .orderBy('createdAt', 'desc')
+                .get()
+                .then((querySnapshot) => {
+                    const items = [];
+                    querySnapshot.forEach((doc) => {
+                        items.push({ id: doc.id, ...doc.data() });
+                    });
+                    displayItems(items, lostItems);
+                })
+                .catch((error) => {
+                    lostItems.innerHTML = '<p>Error loading items. Please try again.</p>';
+                    console.error('Error loading items: ', error);
+                });
+        }
+
+        // Load Found Items
+        function loadFoundItems() {
+            foundItems.innerHTML = '<div class="spinner"></div>';
+            
+            db.collection('items')
+                .where('type', '==', 'found')
+                .where('status', '==', 'active')
+                .orderBy('createdAt', 'desc')
+                .get()
+                .then((querySnapshot) => {
+                    const items = [];
+                    querySnapshot.forEach((doc) => {
+                        items.push({ id: doc.id, ...doc.data() });
+                    });
+                    displayItems(items, foundItems);
+                })
+                .catch((error) => {
+                    foundItems.innerHTML = '<p>Error loading items. Please try again.</p>';
+                    console.error('Error loading items: ', error);
+                });
+        }
+
+        // Load Dashboard Data
+        function loadDashboardData() {
+            // Load stats
+            Promise.all([
+                db.collection('items').get(),
+                db.collection('items').where('status', '==', 'resolved').get(),
+                db.collection('users').get()
+            ]).then((results) => {
+                totalItems.textContent = results[0].size;
+                resolvedItems.textContent = results[1].size;
+                usersCount.textContent = results[2].size;
+            }).catch((error) => {
+                console.error('Error loading stats: ', error);
+            });
+            
+            // Load all items for admin
+            adminItems.innerHTML = '<div class="spinner"></div>';
+            
+            db.collection('items')
+                .orderBy('createdAt', 'desc')
+                .get()
+                .then((querySnapshot) => {
+                    const items = [];
+                    querySnapshot.forEach((doc) => {
+                        items.push({ id: doc.id, ...doc.data() });
+                    });
+                    displayItems(items, adminItems);
+                })
+                .catch((error) => {
+                    adminItems.innerHTML = '<p>Error loading items. Please try again.</p>';
+                    console.error('Error loading items: ', error);
+                });
+            
+            // Load users
+            usersTable.innerHTML = '<tr><td colspan="4" style="text-align: center;">Loading users...</td></tr>';
+            
+            db.collection('users')
+                .get()
+                .then((querySnapshot) => {
+                    allUsers = [];
+                    usersTable.innerHTML = '';
+                    
+                    if (querySnapshot.empty) {
+                        usersTable.innerHTML = '<tr><td colspan="4" style="text-align: center;">No users found.</td></tr>';
+                        return;
+                    }
+                    
+                    querySnapshot.forEach((doc) => {
+                        const user = { id: doc.id, ...doc.data() };
+                        allUsers.push(user);
+                        
+                        const tr = document.createElement('tr');
+                        tr.style.borderBottom = '1px solid var(--border)';
+                        tr.innerHTML = `
+                            <td style="padding: 0.75rem;">${user.firstName} ${user.lastName}</td>
+                            <td style="padding: 0.75rem;">${user.email}</td>
+                            <td style="padding: 0.75rem;">${user.role}</td>
+                            <td style="padding: 0.75rem;">
+                                ${user.role !== 'admin' ? `
+                                    <button class="btn btn-primary make-admin" data-id="${user.id}">Make Admin</button>
+                                ` : ''}
+                            </td>
+                        `;
+                        
+                        usersTable.appendChild(tr);
+                    });
+                    
+                    // Add event listeners to make admin buttons
+                    document.querySelectorAll('.make-admin').forEach(button => {
+                        button.addEventListener('click', (e) => {
+                            const userId = e.target.dataset.id;
+                            makeUserAdmin(userId);
+                        });
+                    });
+                })
+                .catch((error) => {
+                    usersTable.innerHTML = '<tr><td colspan="4" style="text-align: center;">Error loading users.</td></tr>';
+                    console.error('Error loading users: ', error);
+                });
+        }
+
+        // Make User Admin
+        function makeUserAdmin(userId) {
+            db.collection('users').doc(userId).update({
+                role: 'admin'
+            })
+            .then(() => {
+                showNotification('User promoted to admin successfully');
+                loadDashboardData(); // Reload dashboard data
+            })
+            .catch((error) => {
+                showNotification('Error promoting user: ' + error.message, 'error');
+            });
+        }
+
+        // Auth State Listener
+        auth.onAuthStateChanged((user) => {
+            currentUser = user;
+            
+            if (user) {
+                // User is signed in
+                authButtons.style.display = 'none';
+                userMenu.style.display = 'flex';
+                
+                // Get user data from Firestore
+                db.collection('users').doc(user.uid).get()
+                    .then((doc) => {
+                        if (doc.exists) {
+                            currentUserData = doc.data();
+                            userName.textContent = currentUserData.firstName;
+                            
+                            // Show admin dashboard link if user is admin
+                            if (currentUserData.role === 'admin') {
+                                navDashboard.style.display = 'block';
+                            } else {
+                                navDashboard.style.display = 'none';
+                            }
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error getting user data: ', error);
+                    });
+            } else {
+                // User is signed out
+                authButtons.style.display = 'flex';
+                userMenu.style.display = 'none';
+                navDashboard.style.display = 'none';
+                currentUserData = null;
+            }
+            
+            // Load featured items when auth state changes
+            loadFeaturedItems();
+        });
+
+        // Initialize the app
+        showSection('home');
+        loadFeaturedItems();
+    </script>
+</body>
+</html>
